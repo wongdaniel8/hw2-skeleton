@@ -6,7 +6,7 @@ class Atom:
     """
 
     def __init__(self, type):
-        self.type = type
+        self.type = type #this is a string 
         self.coords = (0.0, 0.0, 0.0)
 
     # Overload the __repr__ operator to make printing simpler.
@@ -19,7 +19,7 @@ class Residue:
     """
 
     def __init__(self, type, number):
-        self.type = type
+        self.type = type #this is a string
         self.number = number
         self.atoms = []
 
