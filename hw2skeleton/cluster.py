@@ -1,5 +1,4 @@
 from .utils import Atom, Residue, ActiveSite
-
 def compute_similarity(site_a, site_b):
     """
     Compute the similarity between two given ActiveSite instances.
