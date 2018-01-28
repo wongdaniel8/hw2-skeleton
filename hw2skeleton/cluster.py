@@ -8,6 +8,9 @@ def compute_similarity(site_a, site_b):
     Input: two ActiveSite instances
     Output: the similarity between them (a floating point number)
     """
+    # if site_a == site_b:
+        # return 1.0
+
     a_list = [] #list of only residue type and no number
     for el in site_a.residues:
         a_list.append(el.type)
@@ -16,22 +19,24 @@ def compute_similarity(site_a, site_b):
         b_list.append(el.type)
 
     ##simple intersection
-    a_list = set(a_list)
-    b_list = set(b_list)
-    overlaps = [x for x in a_list if x in b_list]
-    similarity = len(overlaps) / float(min(len(a_list), len(b_list)))
-    return similarity
+    # a_list = set(a_list)
+    # b_list = set(b_list)
+    # overlaps = [x for x in a_list if x in b_list]
+    # similarity = len(overlaps) / float(min(len(a_list), len(b_list)))
+    # return similarity
 
 
     ##find common subset of both lists, with replacement
-    # overlaps = []
-    # for el in a_list:
-    #     if el in b_list: #list removal issue, not iterating enough 
-    #         # print("GGG", a_list, b_list)
-    #         overlaps.append(el)
-    #         b_list.remove(el)
-    # similarity = len(overlaps) / float(max(len(site_a.residues), len(site_b.residues)))
-    # return similarity
+    overlaps = []
+    for el in a_list:
+        if el in b_list: #list removal issue, not iterating enough 
+            # print("GGG", a_list, b_list)
+            overlaps.append(el)
+            b_list.remove(el)
+    similarity = len(overlaps) / float(max(len(site_a.residues), len(site_b.residues)))
+    # similarity = len(overlaps) / float(len(site_a.residues) + len(site_b.residues))
+
+    return similarity
 
 
 def cluster_by_partitioning(active_sites):
@@ -43,8 +48,11 @@ def cluster_by_partitioning(active_sites):
             (this is really a list of clusters, each of which is list of
             ActiveSite instances)
     """
-
     def getClusters(assignments, centerIndices):
+        """
+        given a list of assignments (values indicating which cluster center (defined by index of cluster center in original active_sites input list)
+        will return clusters of the active sites (as values not indices) 
+        """
         clusters = []
         for center in centerIndices:
             centerList = []
@@ -76,14 +84,14 @@ def cluster_by_partitioning(active_sites):
 
     #initialize:
     k = 3
+    if len(active_sites) <= k:
+        return  [[k] for k in active_sites]
     iterations = 100
     centerIndices = []
     assignments = []
     centerIndices = random.sample(range(0, len(active_sites)), k)
     assignments = assignToCenters(centerIndices)
     clusters = getClusters(assignments, centerIndices)
-    # print("initial score", qualityMetric(clusters))
-
 
     #repeat for # of iterations
     for i in range(0, iterations):
@@ -104,10 +112,17 @@ def cluster_by_partitioning(active_sites):
         assignments = assignToCenters(centerIndices)
         clusters = getClusters(assignments, centerIndices)
 
-    # print("final clusters", clusters)
-    # print("final score", qualityMetric(clusters))
-    return clusters
+    ##print list of amino residues in each cluster
+    aminoList = []
+    for c in clusters:
+        l = []
+        for a in c:
+            l.append(a.residues)
+        aminoList.append(l)
+    # print(aminoList)
+    print("final clusters: ", clusters)
 
+    return clusters
 
 def cluster_hierarchically(active_sites):
     """
@@ -151,19 +166,13 @@ def cluster_hierarchically(active_sites):
     clusters = []
     for act in active_sites:
         clusters.append([act])
-    # print(clusters)
 
     while len(clusters) != k:
         i, j = findNearestClusters(clusters)
-        # print("i j ", i, j)
         clusters = join(clusters, i, j)
-        # print("ccc", clusters)
 
-    # print("final", clusters)
+    print("final clusters: ", clusters)
     return clusters
-
-    return []
-
 
 def qualityMetric(clustering):
     """
