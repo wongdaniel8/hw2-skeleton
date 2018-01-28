@@ -23,8 +23,6 @@ def test_partition_clustering():
         active_sites.append(io.read_active_site(filepath))
     assert [] not in cluster.cluster_by_partitioning(active_sites)
     assert len(cluster.cluster_by_partitioning(active_sites)) == 3
-    # assert False
-
 
     pdb_ids = [276]
     active_sites = []
@@ -44,7 +42,6 @@ def test_hierarchical_clustering():
         active_sites.append(io.read_active_site(filepath))
     assert [] not in cluster.cluster_by_partitioning(active_sites)
     assert len(cluster.cluster_by_partitioning(active_sites)) == 3
-    # assert False
 
     pdb_ids = [276]
     active_sites = []
@@ -78,7 +75,5 @@ def test_compareTwoMethods():
         partTotal += partScore
     print("hierScoreAverage: ", hierTotal / float(iterations))
     print("partScoreAverage: ", partTotal / float(iterations))        
-    # assert False
-    # assert True
 
 

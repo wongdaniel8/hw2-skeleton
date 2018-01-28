@@ -8,9 +8,6 @@ def compute_similarity(site_a, site_b):
     Input: two ActiveSite instances
     Output: the similarity between them (a floating point number)
     """
-    # if site_a == site_b:
-        # return 1.0
-
     a_list = [] #list of only residue type and no number
     for el in site_a.residues:
         a_list.append(el.type)
@@ -30,11 +27,9 @@ def compute_similarity(site_a, site_b):
     overlaps = []
     for el in a_list:
         if el in b_list: #list removal issue, not iterating enough 
-            # print("GGG", a_list, b_list)
             overlaps.append(el)
             b_list.remove(el)
     similarity = len(overlaps) / float(max(len(site_a.residues), len(site_b.residues)))
-    # similarity = len(overlaps) / float(len(site_a.residues) + len(site_b.residues))
 
     return similarity
 
@@ -119,7 +114,6 @@ def cluster_by_partitioning(active_sites):
         for a in c:
             l.append(a.residues)
         aminoList.append(l)
-    # print(aminoList)
     print("final clusters: ", clusters)
 
     return clusters
